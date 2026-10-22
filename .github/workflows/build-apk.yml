@@ -1,67 +1,56 @@
-name: Build Limouna V9 - Icon Fix
 
-on: 
-  push:
-    branches: [main]
+name: Build Limouna Live APK
+
+on:
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Setup Node
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install @capacitor/core @capacitor/android
+          npm install --save-dev @capacitor/cli
+
+      - name: Configure Capacitor
+        run: |
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "com.limouna.live",
+            "appName": "Limouna Live",
+            "webDir": "web"
+          }
+          EOF
+
+      - name: Create Android project
+        run: npx cap add android
+
+      - name: Sync web app
+        run: npx cap sync android
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Prepare Project
-        run: |
-          cd Limouna_Live
-          if [ -f "web/manifest.json" ]; then
-            sed -i 's|"https://limouna.live"|"/Limouna_Live/web"|g' web/manifest.json || true
-          fi
-          npm install
-
-      - name: Add Android
-        run: |
-          cd Limouna_Live
-          npx cap add android || true
-          npx cap copy android
-
-      - name: Fix Duplicate Icon Error
-        run: |
-          cd Limouna_Live
-          echo "Deleting duplicate XML icons..."
-          find android -name "ic_launcher.xml" -delete || true
-          rm -rf android/app/src/main/res/mipmap-anydpi-v26 || true
-          
-          echo "Now replacing with Limouna icon..."
-          if [ -f "icon.png" ]; then
-            for d in android/app/src/main/res/mipmap-*; do
-              cp icon.png "$d/ic_launcher.png" || true
-              cp icon.png "$d/ic_launcher_round.png" || true
-            done
-            echo "Icons replaced successfully"
-          fi
+          distribution: temurin
+          java-version: 21
 
       - name: Build APK
-        run: |
-          cd Limouna_Live
-          npx cap copy android
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: limouna-final
-          path: Limouna_Live/android/app/build/outputs/apk/debug/app-debug.apk
+          name: Limouna-Live-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
