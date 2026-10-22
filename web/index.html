@@ -182,6 +182,48 @@ nav button.active { color:var(--lime); }
     </article>
   </div>
   <div id="notice" class="notice"></div>
+
+<section id="authPage" style="display:none;margin-top:20px">
+  <div style="text-align:center;padding:20px 10px">
+    <div style="font-size:58px">🍋</div>
+    <h2 id="authTitle">أهلاً بك في ليمونة</h2>
+    <p style="color:#a4adc1;line-height:1.8">
+      تواصل مع أصدقائك واكتشف عالم البث المباشر
+    </p>
+  </div>
+
+  <div style="background:#19223a;border:1px solid #35405a;border-radius:20px;padding:20px">
+    <label for="authEmail">البريد الإلكتروني</label>
+    <input id="authEmail" type="email" placeholder="name@example.com"
+      style="width:100%;padding:14px;margin:10px 0 16px;border-radius:12px;border:1px solid #35405a;background:#101629;color:white">
+
+    <label for="authPassword">كلمة المرور</label>
+    <input id="authPassword" type="password" placeholder="أدخل كلمة المرور"
+      style="width:100%;padding:14px;margin:10px 0 16px;border-radius:12px;border:1px solid #35405a;background:#101629;color:white">
+
+    <button class="primary" style="width:100%" onclick="demoAuth()">
+      متابعة بالبريد الإلكتروني
+    </button>
+
+    <button class="join" style="margin-top:12px"
+      onclick="showNotice('Google','سنربط تسجيل الدخول بحساب Google بعد إعداد خدمة المصادقة.')">
+      المتابعة باستخدام Google
+    </button>
+
+    <button class="join" style="margin-top:12px"
+      onclick="showNotice('رقم الهاتف','سنضيف تسجيل الدخول برقم الهاتف بعد إعداد خدمة المصادقة.')">
+      المتابعة برقم الهاتف
+    </button>
+
+    <p style="text-align:center;color:#a4adc1;font-size:13px;margin-top:20px">
+      لديك حساب؟
+      <button onclick="toggleAuthMode()" style="border:0;background:none;color:#c7f464">
+        تسجيل الدخول
+      </button>
+    </p>
+    <p id="authMessage" style="color:#c7f464;font-size:13px;line-height:1.8"></p>
+  </div>
+</section>
 </main>
 
 <nav>
@@ -217,6 +259,8 @@ function goTab(button, name) {
     document.querySelector('.stories').style.display = '';
     document.querySelectorAll('.section-head,.filters,.rooms').forEach(el => el.style.display = '');
     showNotice('الرئيسية','أنت في الصفحة الرئيسية.');
+  } else if (name === 'حسابي') {
+    openAuth();
   } else {
     showNotice(name, {
       'استكشاف':'سنضيف البحث عن الأشخاص والغرف في المرحلة التالية.',
@@ -225,6 +269,45 @@ function goTab(button, name) {
       'حسابي':'سنضيف تسجيل الدخول والملف الشخصي في المرحلة التالية.'
     }[name] || 'قريباً');
   }
+}
+  let authIsSignup = true;
+
+function openAuth() {
+  document.getElementById('authPage').style.display = 'block';
+  document.querySelector('.welcome').style.display = 'none';
+  document.querySelector('.stories').style.display = 'none';
+  document.querySelectorAll('.section-head,.filters,.rooms')
+    .forEach(el => el.style.display = 'none');
+  document.getElementById('notice').style.display = 'none';
+  document.getElementById('authPage').scrollIntoView({behavior:'smooth'});
+}
+
+function toggleAuthMode() {
+  authIsSignup = !authIsSignup;
+  document.getElementById('authTitle').textContent =
+    authIsSignup ? 'إنشاء حساب جديد' : 'تسجيل الدخول';
+  document.querySelector('#authPage .primary').textContent =
+    authIsSignup ? 'إنشاء حساب' : 'تسجيل الدخول';
+  document.getElementById('authMessage').textContent = '';
+}
+
+function demoAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const message = document.getElementById('authMessage');
+
+  if (!email || !password) {
+    message.textContent = 'أدخل البريد الإلكتروني وكلمة المرور أولاً.';
+    return;
+  }
+
+  if (password.length < 6) {
+    message.textContent = 'يجب أن تكون كلمة المرور 6 أحرف على الأقل.';
+    return;
+  }
+
+  message.textContent =
+    'الواجهة جاهزة، لكن تسجيل الحسابات لم يُربط بخادم بعد. سنفعّل ذلك في الخطوة القادمة.';
 }
 </script>
 </body>
