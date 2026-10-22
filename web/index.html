@@ -1,28 +1,77 @@
 <!DOCTYPE html>
-<html dir="rtl">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Limouna</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limouna Live 🍋</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<style>body{font-family:sans-serif;background:#fff8e1;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}.card{background:white;padding:25px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.1);width:90%;max-width:350px;text-align:center}.btn{width:100%;padding:14px;border:none;border-radius:12px;margin:8px 0;font-size:16px;font-weight:bold;cursor:pointer}.google{background:white;border:1px solid #ddd}.phone{background:#ff9800;color:white}</style>
+<style>
+*{font-family:'Tajawal',sans-serif;box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(180deg,#FFF9C4 0%, #FFF8E1 100%);display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:white;width:100%;max-width:380px;border-radius:28px;padding:30px 24px;box-shadow:0 20px 60px rgba(255,193,7,0.25);text-align:center;border:2px solid #FFF176}
+.logo{font-size:56px;margin-bottom:10px}
+.title{font-size:28px;font-weight:800;color:#F57F17;margin:0}
+.subtitle{color:#8D6E63;font-size:14px;margin:8px 0 24px}
+.btn{width:100%;padding:16px;border-radius:16px;border:none;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:.2s;margin-bottom:12px}
+.btn:active{transform:scale(.97)}
+.btn-google{background:#fff;border:2px solid #EEE;color:#333}
+.btn-google:hover{background:#FAFAFA}
+.btn-phone{background:linear-gradient(135deg,#FFA000,#FF6F00);color:white;box-shadow:0 8px 20px rgba(255,152,0,.35)}
+.divider{margin:18px 0;color:#BCAAA4;font-size:13px;position:relative}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:35%;height:1px;background:#FFE0B2}
+.divider::before{right:0}.divider::after{left:0}
+#status{margin-top:12px;font-size:13px;color:#E65100;min-height:18px}
+.foot{margin-top:20px;font-size:11px;color:#A1887F}
+</style>
 </head>
 <body>
-<div class="card"><h2>🍋 Limouna Live</h2><button class="btn google" onclick="loginGoogle()">🔵 الدخول بحساب Google</button><button class="btn phone" onclick="location.href='phone.html'">📱 الدخول برقم الهاتف</button><p id="status"></p></div>
+<div class="card">
+<div class="logo">🍋</div>
+<h1 class="title">Limouna Live</h1>
+<p class="subtitle">منصة المزارعين المباشرة - طازج من المزرعة</p>
+
+<button class="btn btn-google" onclick="loginGoogle()">
+<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> الدخول بحساب Google
+</button>
+
+<div class="divider">أو</div>
+
+<button class="btn btn-phone" onclick="location.href='phone.html'">
+📱 الدخول برقم الهاتف
+</button>
+
+<p id="status"></p>
+<p class="foot">© 2026 Limouna Live - صنع بحب للمزارعين اليمنيين</p>
+</div>
+
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDqTsJ1yim1VfAwwdv68yhAsBiBR7KaZ18",
-  authDomain: "limouna-live.firebaseapp.com",
-  projectId: "limouna-live",
-  storageBucket: "limouna-live.firebasestorage.app",
-  messagingSenderId: "831659211988",
-  appId: "1:831659211988:web:ddef2a2ea6ada1d80ecf41",
-  measurementId: "G-0DXYFLMJPT"
-};
+const firebaseConfig = {apiKey:"AIzaSyDqTsJ1yim1VfAwwdv68yhAsBiBR7KaZ18",authDomain:"limouna-live.firebaseapp.com",projectId:"limouna-live",storageBucket:"limouna-live.firebasestorage.app",messagingSenderId:"831659211988",appId:"1:831659211988:web:ddef2a2ea6ada1d80ecf41"};
 firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();const db=firebase.firestore();
-function loginGoogle(){document.getElementById('status').innerText='جاري فتح جوجل...';const p=new firebase.auth.GoogleAuthProvider();auth.signInWithPopup(p).then(r=>db.collection('users').doc(r.user.uid).set({name:r.user.displayName,email:r.user.email,photo:r.user.photoURL,lastLogin:new Date()},{merge:true})).then(()=>location.href='home.html').catch(e=>{document.getElementById('status').innerText=e.message;auth.signInWithRedirect(p);});}
+const auth=firebase.auth();
+const db=firebase.firestore();
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+// يصلح مشكلة المتصفح الداخلي لواتساب
+auth.getRedirectResult().then((result)=>{
+  if(result.user){
+    return db.collection('users').doc(result.user.uid).set({name:result.user.displayName,email:result.user.email,photo:result.user.photoURL,lastLogin:new Date()},{merge:true}).then(()=>location.href='home.html');
+  }
+});
+
+function loginGoogle(){
+  document.getElementById('status').innerText='جاري فتح جوجل...';
+  const provider = new firebase.auth.GoogleAuthProvider();
+  // لو داخل واتساب استخدم redirect بدل popup
+  const isInApp = /FBAN|FBAV|WhatsApp|Instagram/i.test(navigator.userAgent);
+  if(isInApp){
+    auth.signInWithRedirect(provider);
+  } else {
+    auth.signInWithPopup(provider).then(r=>db.collection('users').doc(r.user.uid).set({name:r.user.displayName,email:r.user.email,photo:r.user.photoURL,lastLogin:new Date()},{merge:true}).then(()=>location.href='home.html')).catch(e=>{document.getElementById('status').innerText=e.message});
+  }
+}
 </script>
 </body>
 </html>
