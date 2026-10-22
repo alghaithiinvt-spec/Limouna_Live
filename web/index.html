@@ -1,62 +1,56 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Limona Live</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Limona - دخول</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal'}
-html,body{width:100%;height:100%;overflow:hidden;background:#020f2e}
-.app{
-  width:100%;height:100dvh;
-  max-width:480px;margin:0 auto;
-  background: url('bg.jpg') no-repeat center / cover;
-  display:flex;flex-direction:column;align-items:center;
-  padding:18px 20px 24px;
-}
-.logo{width:min(62vw, 260px);margin-top:clamp(15px, 5vh, 40px);filter:drop-shadow(0 10px 20px rgba(0,0,0,.6))}
-.t1{color:#ffe600;font-size:clamp(22px, 6vw, 28px);font-weight:800;margin-top:16px;text-align:center}
-.t2{color:#a8b9df;font-size:clamp(11px, 3vw, 12.5px);margin-top:4px}
-.box{width:100%;margin-top:auto;display:flex;flex-direction:column;gap:11px}
-.b{width:100%;height:clamp(50px, 6.5vh, 56px);border-radius:28px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:700;font-size:clamp(12px, 3.6vw, 14px);border:2px solid;cursor:pointer}
-.b:active{transform:scale(.97)}
-.bg1{background:linear-gradient(90deg,#ffe600,#ffcc00);border-color:#ffe600;color:#111;box-shadow:0 8px 18px rgba(255,230,0,.35)}
-.bg2{background:rgba(0,0,0,.28);backdrop-filter:blur(10px);border-color:#d6ff00;color:#fff}
-.bg3{background:rgba(18,44,130,.7);backdrop-filter:blur(10px);border-color:#3a5bd1;color:#d9e4ff;width:88%;align-self:center;height:clamp(42px, 5.8vh, 50px);justify-content:center;gap:10px}
-.sep{display:flex;align-items:center;justify-content:center;gap:10px;color:#8aa0d0;font-size:14px}
-.sep::before,.sep::after{content:'';height:1px;width:70px;background:#2a4aa0;display:block}
-.guest{background:none;border:none;color:#7e92bb;font-size:13px;margin:6px auto 0}
-#load{position:fixed;inset:0;background:rgba(2,15,46,.9);display:none;place-items:center;color:#ffe600;z-index:99}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 16px;border-radius:10px;display:none;z-index:100;font-size:13px}
+body{font-family:sans-serif;background:#fff8e1;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
+.card{background:white;padding:25px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.1);width:90%;max-width:350px;text-align:center}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;margin:8px 0;font-size:16px;font-weight:bold;cursor:pointer}
+.google{background:white;border:1px solid #ddd}
+.phone{background:#ff9800;color:white}
 </style>
 </head>
 <body>
-<div class="app">
-  <img class="logo" src="icon.png">
-  <div class="t1">مرحباً بك في ليمونة لايف</div>
-  <div class="t2">تواصل . بث مباشر . تعرف على أصدقاء جدد</div>
-  <div class="box">
-    <button id="g" class="b bg1"><span style="background:#fff;width:28px;height:28px;border-radius:50%;display:grid;place-items:center">G</span><span>إنشاء حساب جديد باستخدام جوجل</span><span>→</span></button>
-    <button id="p" class="b bg2"><span>📞</span><span>إنشاء حساب جديد برقم الهاتف</span><span>→</span></button>
-    <div class="sep">أو</div>
-    <button id="l" class="b bg3">↪ تسجيل الدخول إلى حسابك</button>
-    <button id="sk" class="guest">تخطي الآن</button>
-  </div>
+<div class="card">
+<h2>🍋 Limouna Live</h2>
+<p>سجل دخولك لبدء البث</p>
+<button class="btn google" onclick="loginGoogle()">🔵 الدخول بحساب Google</button>
+<button class="btn phone" onclick="location.href='phone.html'">📱 الدخول برقم الهاتف</button>
+<p id="status"></p>
 </div>
-<div id="load">⏳ جاري...</div>
-<div id="toast"></div>
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getAuth,GoogleAuthProvider,signInWithPopup}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-let auth;try{auth=getAuth(initializeApp({apiKey:"ضع_مفتاحك",authDomain:"limona-live.firebaseapp.com",projectId:"limona-live"}))}catch(e){}
-const $=s=>document.querySelector(s);
-const load=v=>$('#load').style.display=v?'grid':'none';
-const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';setTimeout(()=>t.style.display='none',3000)};
-$('#g').onclick=async()=>{if(!auth){toast('فعل Firebase أولاً');return}try{load(true);const pr=new GoogleAuthProvider();const r=await signInWithPopup(auth,pr);location.href='https://limona.live?uid='+r.user.uid}catch(e){toast(e.message)}finally{load(false)}};
-$('#p').onclick=()=>location.href='phone.html?mode=signup';
-$('#l').onclick=()=>location.href='phone.html?mode=login';
-$('#sk').onclick=()=>location.href='https://limona.live?guest=1';
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDqTsJ1yim1VfAwwdv68yhAsBiBR7KaZ18",
+  authDomain: "limouna-live.firebaseapp.com",
+  projectId: "limouna-live",
+  storageBucket: "limouna-live.firebasestorage.app",
+  messagingSenderId: "831659211988",
+  appId: "1:831659211988:web:ddef2a2ea6ada1d80ecf41",
+  measurementId: "G-0DXYFLMJPT"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+function loginGoogle(){
+ document.getElementById('status').innerText='جاري فتح جوجل...';
+ const provider = new firebase.auth.GoogleAuthProvider();
+ auth.signInWithPopup(provider).then((res)=>{
+   return db.collection('users').doc(res.user.uid).set({
+     name: res.user.displayName,
+     email: res.user.email,
+     photo: res.user.photoURL,
+     lastLogin: new Date()
+   },{merge:true});
+ }).then(()=>{ location.href='home.html'; })
+ .catch(e=>{
+   document.getElementById('status').innerText='خطأ: '+e.message;
+   if(e.code=='auth/popup-blocked') auth.signInWithRedirect(provider);
+ });
+}
 </script>
 </body>
 </html>
