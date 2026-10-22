@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>دخول بالهاتف</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<style>
+body{font-family:sans-serif;background:#fff8e1;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
+.card{background:white;padding:25px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.1);width:90%;max-width:350px;text-align:center}
+input{width:100%;padding:14px;border:1px solid #ddd;border-radius:12px;margin:8px 0;font-size:16px;box-sizing:border-box}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;margin:8px 0;font-size:16px;font-weight:bold;cursor:pointer;background:#ff9800;color:white}
+</style>
+</head>
+<body>
+<div class="card">
+<h3>📱 الدخول برقم الهاتف</h3>
+<input id="phone" placeholder="+967 777 123 456" value="+967">
+<div id="recaptcha-container"></div>
+<button class="btn" id="sendBtn" onclick="sendCode()">إرسال رمز التحقق</button>
+<div id="codeDiv" style="display:none">
+<input id="code" placeholder="ادخل رمز 6 أرقام">
+<button class="btn" onclick="verifyCode()">تأكيد الدخول</button>
+</div>
+<p id="status"></p>
+<button onclick="location.href='index.html'" style="background:none;border:none;color:#888">رجوع</button>
+</div>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDqTsJ1yim1VfAwwdv68yhAsBiBR7KaZ18",
+  authDomain: "limouna-live.firebaseapp.com",
+  projectId: "limouna-live",
+  storageBucket: "limouna-live.firebasestorage.app",
+  messagingSenderId: "831659211988",
+  appId: "1:831659211988:web:ddef2a2ea6ada1d80ecf41",
+  measurementId: "G-0DXYFLMJPT"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {'size':'normal'});
+let confirmationResult;
+function sendCode(){
+  const phone=document.getElementById('phone').value.trim();
+  const status=document.getElementById('status');
+  if(!phone.startsWith('+')){status.innerText='لازم يبدأ بـ +967';return;}
+  status.innerText='جاري الإرسال...'; document.getElementById('sendBtn').disabled=true;
+  auth.signInWithPhoneNumber(phone, window.recaptchaVerifier).then(res=>{
+    confirmationResult=res; status.innerText='تم إرسال الرمز ✅';
+    document.getElementById('codeDiv').style.display='block';
+  }).catch(e=>{ status.innerText='خطأ: '+e.message; document.getElementById('sendBtn').disabled=false; });
+}
+function verifyCode(){
+  const code=document.getElementById('code').value.trim();
+  document.getElementById('status').innerText='جاري التأكيد...';
+  confirmationResult.confirm(code).then(result=>{
+    return db.collection('users').doc(result.user.uid).set({phone:result.user.phoneNumber,lastLogin:new Date()},{merge:true});
+  }).then(()=>{ location.href='home.html'; }).catch(e=>{ document.getElementById('status').innerText='رمز خاطئ: '+e.message; });
+}
+</script>
+</body>
+</html>
