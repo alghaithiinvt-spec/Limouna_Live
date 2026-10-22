@@ -2,26 +2,14 @@
 <html dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Limona - دخول</title>
+<title>Limouna</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<style>
-body{font-family:sans-serif;background:#fff8e1;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
-.card{background:white;padding:25px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.1);width:90%;max-width:350px;text-align:center}
-.btn{width:100%;padding:14px;border:none;border-radius:12px;margin:8px 0;font-size:16px;font-weight:bold;cursor:pointer}
-.google{background:white;border:1px solid #ddd}
-.phone{background:#ff9800;color:white}
-</style>
+<style>body{font-family:sans-serif;background:#fff8e1;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}.card{background:white;padding:25px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.1);width:90%;max-width:350px;text-align:center}.btn{width:100%;padding:14px;border:none;border-radius:12px;margin:8px 0;font-size:16px;font-weight:bold;cursor:pointer}.google{background:white;border:1px solid #ddd}.phone{background:#ff9800;color:white}</style>
 </head>
 <body>
-<div class="card">
-<h2>🍋 Limouna Live</h2>
-<p>سجل دخولك لبدء البث</p>
-<button class="btn google" onclick="loginGoogle()">🔵 الدخول بحساب Google</button>
-<button class="btn phone" onclick="location.href='phone.html'">📱 الدخول برقم الهاتف</button>
-<p id="status"></p>
-</div>
+<div class="card"><h2>🍋 Limouna Live</h2><button class="btn google" onclick="loginGoogle()">🔵 الدخول بحساب Google</button><button class="btn phone" onclick="location.href='phone.html'">📱 الدخول برقم الهاتف</button><p id="status"></p></div>
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyDqTsJ1yim1VfAwwdv68yhAsBiBR7KaZ18",
@@ -33,24 +21,8 @@ const firebaseConfig = {
   measurementId: "G-0DXYFLMJPT"
 };
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-function loginGoogle(){
- document.getElementById('status').innerText='جاري فتح جوجل...';
- const provider = new firebase.auth.GoogleAuthProvider();
- auth.signInWithPopup(provider).then((res)=>{
-   return db.collection('users').doc(res.user.uid).set({
-     name: res.user.displayName,
-     email: res.user.email,
-     photo: res.user.photoURL,
-     lastLogin: new Date()
-   },{merge:true});
- }).then(()=>{ location.href='home.html'; })
- .catch(e=>{
-   document.getElementById('status').innerText='خطأ: '+e.message;
-   if(e.code=='auth/popup-blocked') auth.signInWithRedirect(provider);
- });
-}
+const auth=firebase.auth();const db=firebase.firestore();
+function loginGoogle(){document.getElementById('status').innerText='جاري فتح جوجل...';const p=new firebase.auth.GoogleAuthProvider();auth.signInWithPopup(p).then(r=>db.collection('users').doc(r.user.uid).set({name:r.user.displayName,email:r.user.email,photo:r.user.photoURL,lastLogin:new Date()},{merge:true})).then(()=>location.href='home.html').catch(e=>{document.getElementById('status').innerText=e.message;auth.signInWithRedirect(p);});}
 </script>
 </body>
 </html>
