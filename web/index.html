@@ -1,75 +1,229 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Limouna Live 🍋</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<meta name="theme-color" content="#101629">
+<title>ليمونة لايف</title>
 <style>
-*{font-family:'Tajawal',sans-serif;box-sizing:border-box}
-body{margin:0;min-height:100vh;background:linear-gradient(180deg,#FFF9C4 0%, #FFF8E1 100%);display:flex;align-items:center;justify-content:center;padding:20px}
-.card{background:white;width:100%;max-width:380px;border-radius:28px;padding:30px 24px;box-shadow:0 20px 60px rgba(255,193,7,0.25);text-align:center;border:2px solid #FFF176}
-.logo{font-size:56px;margin-bottom:10px}
-.title{font-size:28px;font-weight:800;color:#F57F17;margin:0}
-.subtitle{color:#8D6E63;font-size:14px;margin:8px 0 24px}
-.btn{width:100%;padding:16px;border-radius:16px;border:none;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:.2s;margin-bottom:12px}
-.btn:active{transform:scale(.97)}
-.btn-google{background:#fff;border:2px solid #EEE;color:#333}
-.btn-google:hover{background:#FAFAFA}
-.btn-phone{background:linear-gradient(135deg,#FFA000,#FF6F00);color:white;box-shadow:0 8px 20px rgba(255,152,0,.35)}
-.divider{margin:18px 0;color:#BCAAA4;font-size:13px;position:relative}
-.divider::before,.divider::after{content:'';position:absolute;top:50%;width:35%;height:1px;background:#FFE0B2}
-.divider::before{right:0}.divider::after{left:0}
-#status{margin-top:12px;font-size:13px;color:#E65100;min-height:18px}
-.foot{margin-top:20px;font-size:11px;color:#A1887F}
+:root {
+  --bg: #101629;
+  --panel: #19223a;
+  --lime: #c7f464;
+  --text: #f7f8fc;
+  --muted: #a4adc1;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  padding-bottom: 86px;
+}
+header {
+  padding: 20px 17px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.brand { display:flex; align-items:center; gap:10px; }
+.logo {
+  width:43px; height:43px; border-radius:15px;
+  background:var(--lime); color:var(--bg);
+  display:grid; place-items:center; font-size:25px;
+}
+h1 { font-size:20px; margin:0; }
+.brand p { margin:4px 0 0; font-size:12px; color:var(--muted); }
+.round {
+  border:1px solid #35405a; border-radius:50%;
+  width:42px; height:42px; background:var(--panel);
+  color:white; font-size:19px;
+}
+main { padding:0 16px; }
+.welcome {
+  padding:19px; border-radius:22px;
+  background:linear-gradient(135deg,#27364c,#19223a);
+  border:1px solid #35405a;
+}
+.welcome small { color:var(--lime); }
+.welcome h2 { font-size:24px; margin:10px 0; }
+.welcome p { color:var(--muted); font-size:14px; line-height:1.7; }
+.primary {
+  background:var(--lime); color:#11182a;
+  border:0; border-radius:13px; padding:12px 17px;
+  font-size:14px; font-weight:bold;
+}
+.section-head {
+  display:flex; justify-content:space-between;
+  align-items:center; margin:25px 0 14px;
+}
+.section-head h3 { margin:0; font-size:17px; }
+.section-head button {
+  color:var(--lime); background:none; border:0; font-size:13px;
+}
+.stories {
+  display:flex; gap:15px; overflow-x:auto; padding-bottom:5px;
+}
+.story { text-align:center; min-width:64px; font-size:12px; color:var(--muted); }
+.avatar {
+  width:57px; height:57px; border-radius:50%;
+  background:#2d3a54; border:2px solid var(--lime);
+  display:grid; place-items:center; font-size:26px;
+  margin:0 auto 7px;
+}
+.filters { display:flex; gap:9px; overflow:auto; }
+.filter {
+  padding:10px 16px; white-space:nowrap; border-radius:20px;
+  background:var(--panel); color:var(--muted);
+  border:1px solid #35405a;
+}
+.filter.active { background:var(--lime); color:#101629; border-color:var(--lime); }
+.rooms { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.room {
+  overflow:hidden; border-radius:17px;
+  background:var(--panel); border:1px solid #303b54;
+}
+.cover {
+  min-height:125px; display:grid; place-items:center;
+  background:linear-gradient(145deg,#394765,#202a43);
+  font-size:43px; position:relative;
+}
+.live {
+  position:absolute; top:9px; right:9px;
+  background:#e84d69; color:white; font-size:10px;
+  padding:5px 8px; border-radius:7px;
+}
+.viewers {
+  position:absolute; bottom:8px; left:8px;
+  background:#101629d9; padding:5px 7px;
+  border-radius:7px; font-size:10px;
+}
+.room-info { padding:11px; }
+.room-info strong { display:block; font-size:13px; }
+.room-info p { color:var(--muted); font-size:11px; margin:7px 0 10px; }
+.join {
+  width:100%; border:1px solid var(--lime);
+  color:var(--lime); background:transparent;
+  border-radius:10px; padding:9px;
+}
+nav {
+  position:fixed; bottom:0; right:0; left:0;
+  display:flex; justify-content:space-around;
+  background:#151d31; border-top:1px solid #303b54;
+  padding:10px 3px calc(10px + env(safe-area-inset-bottom));
+}
+nav button {
+  border:0; background:none; color:var(--muted);
+  font-size:11px; display:flex; flex-direction:column;
+  align-items:center; gap:5px; min-width:55px;
+}
+nav button span { font-size:21px; }
+nav button.active { color:var(--lime); }
+.notice {
+  display:none; margin-top:15px; padding:13px;
+  border-radius:12px; background:#26334a;
+  color:var(--lime); font-size:13px; line-height:1.7;
+}
+.empty { text-align:center; padding:35px 10px; color:var(--muted); }
 </style>
 </head>
 <body>
-<div class="card">
-<div class="logo">🍋</div>
-<h1 class="title">Limouna Live</h1>
-<p class="subtitle">منصة المزارعين المباشرة - طازج من المزرعة</p>
+<header>
+  <div class="brand">
+    <div class="logo">🍋</div>
+    <div><h1>ليمونة لايف</h1><p>عالمك، أصدقاؤك، لحظاتك</p></div>
+  </div>
+  <button class="round" onclick="showNotice('الإشعارات','لا توجد إشعارات جديدة في النسخة التجريبية.')">♧</button>
+</header>
 
-<button class="btn btn-google" onclick="loginGoogle()">
-<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> الدخول بحساب Google
-</button>
+<main id="content">
+  <section class="welcome">
+    <small>أهلاً بك في ليمونة</small>
+    <h2>لحظات تجمعنا</h2>
+    <p>اكتشف أصدقاء جدد، تعرّف على الغرف المباشرة وشارك لحظاتك مع المجتمع.</p>
+    <button class="primary" onclick="showNotice('ابدأ البث','واجهة البث تجريبية. سنضيف تشغيل الكاميرا والبث الحقيقي بعد إعداد خدمة البث.')">＋ ابدأ البث</button>
+  </section>
 
-<div class="divider">أو</div>
+  <div class="section-head"><h3>المذيعون</h3><button onclick="showNotice('المذيعون','هذه أسماء تجريبية للعرض فقط.')">عرض الكل ←</button></div>
+  <div class="stories">
+    <div class="story"><div class="avatar">＋</div>أضف قصتك</div>
+    <div class="story"><div class="avatar">👨🏻</div>ياسر</div>
+    <div class="story"><div class="avatar">👩🏻</div>نور</div>
+    <div class="story"><div class="avatar">🧑🏽</div>سامي</div>
+    <div class="story"><div class="avatar">👩🏽</div>ليان</div>
+  </div>
 
-<button class="btn btn-phone" onclick="location.href='phone.html'">
-📱 الدخول برقم الهاتف
-</button>
+  <div class="section-head"><h3>الغرف المباشرة</h3><button onclick="showNotice('الغرف','المعروض الآن غرف تجريبية وليست بثوثًا حقيقية.')">عرض الكل ←</button></div>
+  <div class="filters">
+    <button class="filter active" onclick="filterRooms('all',this)">الكل</button>
+    <button class="filter" onclick="filterRooms('chat',this)">دردشة</button>
+    <button class="filter" onclick="filterRooms('music',this)">موسيقى</button>
+    <button class="filter" onclick="filterRooms('friends',this)">أصدقاء</button>
+  </div>
 
-<p id="status"></p>
-<p class="foot">© 2026 Limouna Live - صنع بحب للمزارعين اليمنيين</p>
-</div>
+  <div class="rooms" id="rooms" style="margin-top:14px">
+    <article class="room" data-type="chat">
+      <div class="cover">💬<span class="live">● مباشر</span><span class="viewers">◉ 128</span></div>
+      <div class="room-info"><strong>سوالف المساء</strong><p>بواسطة ياسر</p><button class="join" onclick="joinRoom('سوالف المساء')">دخول الغرفة</button></div>
+    </article>
+    <article class="room" data-type="music">
+      <div class="cover">🎵<span class="live">● مباشر</span><span class="viewers">◉ 86</span></div>
+      <div class="room-info"><strong>أجواء موسيقية</strong><p>بواسطة نور</p><button class="join" onclick="joinRoom('أجواء موسيقية')">دخول الغرفة</button></div>
+    </article>
+    <article class="room" data-type="friends">
+      <div class="cover">🤝<span class="live">● مباشر</span><span class="viewers">◉ 54</span></div>
+      <div class="room-info"><strong>أصدقاء ليمونة</strong><p>بواسطة سامي</p><button class="join" onclick="joinRoom('أصدقاء ليمونة')">دخول الغرفة</button></div>
+    </article>
+    <article class="room" data-type="chat">
+      <div class="cover">🌙<span class="live">● مباشر</span><span class="viewers">◉ 37</span></div>
+      <div class="room-info"><strong>سهرة هادئة</strong><p>بواسطة ليان</p><button class="join" onclick="joinRoom('سهرة هادئة')">دخول الغرفة</button></div>
+    </article>
+  </div>
+  <div id="notice" class="notice"></div>
+</main>
+
+<nav>
+  <button class="active" onclick="goTab(this,'الرئيسية')"><span>⌂</span>الرئيسية</button>
+  <button onclick="goTab(this,'استكشاف')"><span>⌕</span>استكشاف</button>
+  <button onclick="goTab(this,'البث')"><span>◉</span>البث</button>
+  <button onclick="goTab(this,'الرسائل')"><span>▤</span>الرسائل</button>
+  <button onclick="goTab(this,'حسابي')"><span>♙</span>حسابي</button>
+</nav>
 
 <script>
-const firebaseConfig = {apiKey:"AIzaSyDqTsJ1yim1VfAwwdv68yhAsBiBR7KaZ18",authDomain:"limouna-live.firebaseapp.com",projectId:"limouna-live",storageBucket:"limouna-live.firebasestorage.app",messagingSenderId:"831659211988",appId:"1:831659211988:web:ddef2a2ea6ada1d80ecf41"};
-firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const db=firebase.firestore();
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
-// يصلح مشكلة المتصفح الداخلي لواتساب
-auth.getRedirectResult().then((result)=>{
-  if(result.user){
-    return db.collection('users').doc(result.user.uid).set({name:result.user.displayName,email:result.user.email,photo:result.user.photoURL,lastLogin:new Date()},{merge:true}).then(()=>location.href='home.html');
-  }
-});
-
-function loginGoogle(){
-  document.getElementById('status').innerText='جاري فتح جوجل...';
-  const provider = new firebase.auth.GoogleAuthProvider();
-  // لو داخل واتساب استخدم redirect بدل popup
-  const isInApp = /FBAN|FBAV|WhatsApp|Instagram/i.test(navigator.userAgent);
-  if(isInApp){
-    auth.signInWithRedirect(provider);
+function showNotice(title, message) {
+  const box = document.getElementById('notice');
+  box.style.display = 'block';
+  box.innerHTML = '<strong>' + title + '</strong><br>' + message;
+  box.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function joinRoom(name) {
+  showNotice(name, 'دخلت الغرفة التجريبية. عدد المشاهدين والتعليقات والبث الحقيقي غير متصلين بخادم بعد.');
+}
+function filterRooms(type, button) {
+  document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+  button.classList.add('active');
+  document.querySelectorAll('.room').forEach(room => {
+    room.style.display = type === 'all' || room.dataset.type === type ? '' : 'none';
+  });
+}
+function goTab(button, name) {
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  button.classList.add('active');
+  if (name === 'الرئيسية') {
+    document.querySelector('.welcome').style.display = '';
+    document.querySelector('.stories').style.display = '';
+    document.querySelectorAll('.section-head,.filters,.rooms').forEach(el => el.style.display = '');
+    showNotice('الرئيسية','أنت في الصفحة الرئيسية.');
   } else {
-    auth.signInWithPopup(provider).then(r=>db.collection('users').doc(r.user.uid).set({name:r.user.displayName,email:r.user.email,photo:r.user.photoURL,lastLogin:new Date()},{merge:true}).then(()=>location.href='home.html')).catch(e=>{document.getElementById('status').innerText=e.message});
+    showNotice(name, {
+      'استكشاف':'سنضيف البحث عن الأشخاص والغرف في المرحلة التالية.',
+      'البث':'سنربط البث المباشر بعد إعداد خدمة الصوت والفيديو.',
+      'الرسائل':'سنضيف المحادثات الخاصة بعد إعداد قاعدة البيانات.',
+      'حسابي':'سنضيف تسجيل الدخول والملف الشخصي في المرحلة التالية.'
+    }[name] || 'قريباً');
   }
 }
 </script>
