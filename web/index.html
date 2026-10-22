@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ليمونة LIVE 🍋</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{font-family:'Cairo',sans-serif}
+body{background:#080a00}
+::-webkit-scrollbar{display:none}
+.limona-card{background:linear-gradient(180deg,#1e1e00 0%,#141400 100%);border:1px solid rgba(255,235,59,0.08)}
+.live-badge{background:linear-gradient(90deg,#ff3b3b,#ff006a)}
+.yellow-btn{background:linear-gradient(90deg,#ffeb3b,#ffcc00);color:#000}
+.nav-active{color:#ffeb3b !important}
+.glow{box-shadow:0 0 20px rgba(255,235,59,0.15)}
+</style>
+</head>
+<body class="flex justify-center bg-[#050700]">
+<div class="w-full max-w-[430px] min-h-[100dvh] bg-[#0f1005] relative flex flex-col overflow-hidden">
+
+<!-- SPLASH -->
+<div id="splash" class="absolute inset-0 z-[100] bg-[#0f1005] flex flex-col items-center justify-center p-8 transition-all duration-700">
+<div class="absolute inset-0 bg-gradient-to-b from-yellow-500/10 to-transparent"></div>
+<div class="relative text-center">
+<div class="w-[140px] h-[140px] relative mx-auto">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 text-3xl">👑</div>
+<div class="w-full h-full rounded-[36px] bg-gradient-to-br from-[#ffeb3b] to-[#ffb800] flex items-center justify-center text-7xl shadow-[0_0_60px_rgba(255,235,59,0.4)]">🍋</div>
+</div>
+<h1 class="text-[56px] font-black text-[#ffeb3b] leading-none mt-6 tracking-tight">ليمونة</h1>
+<p class="text-[#ffeb3b] font-bold tracking-[8px] text-sm -mt-1">LIVE</p>
+<p class="text-white/60 text-[13px] mt-6">مشاهدة .. تواصل .. أصدقاء جدد</p>
+<div class="w-full mt-10">
+<div class="w-full h-[4px] bg-white/10 rounded-full overflow-hidden"><div id="loadBar" class="h-full bg-[#ffeb3b] w-0 transition-all duration-[2500ms]"></div></div>
+<p class="text-[#ffeb3b] text-[11px] text-center mt-3">أهلاً بك في ليمونة لايف 🍋</p>
+</div>
+</div>
+</div>
+
+<!-- HEADER -->
+<div id="header" class="px-4 py-3 flex justify-between items-center bg-[#15170a] border-b border-white/[0.06] sticky top-0 z-40">
+<div class="flex items-center gap-2"><span class="text-xl">🍋</span><span class="font-black text-[#ffeb3b] text-[18px]">ليمونة</span></div>
+<div class="flex gap-3 text-white/70"><i class="fa-solid fa-magnifying-glass" onclick="showScreen('search')"></i><i class="fa-regular fa-bell"></i></div>
+</div>
+
+<!-- SCREENS -->
+<div id="screens" class="flex-1 overflow-y-auto pb-[80px]">
+
+<!-- HOME -->
+<div id="home" class="screen p-3">
+<div class="limona-card rounded-[20px] p-3 flex gap-3 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-l from-[#ffeb3b]/10 to-transparent"></div>
+<img src="https://i.pravatar.cc/200?img=32" class="w-[88px] h-[88px] rounded-[16px] object-cover relative z-10">
+<div class="flex-1 relative z-10">
+<p class="text-white font-bold text-[14px]">بثوث مميزة</p>
+<p class="text-white/50 text-[11px] mt-1">اكتشف أجمل اللحظات</p>
+<button class="yellow-btn text-[11px] font-black px-4 py-1.5 rounded-full mt-2">ادخل الآن</button>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-2 mt-4">
+<div class="text-center"><div class="w-12 h-12 mx-auto rounded-full bg-[#ff3b3b]/20 flex items-center justify-center text-[#ff3b3b]"><i class="fa-solid fa-video"></i></div><p class="text-[10px] text-white/70 mt-1">مباشر</p></div>
+<div class="text-center" onclick="showScreen('rooms')"><div class="w-12 h-12 mx-auto rounded-full bg-[#8b5cf6]/20 flex items-center justify-center text-[#8b5cf6]"><i class="fa-solid fa-users"></i></div><p class="text-[10px] text-white/70 mt-1">غرف جماعية</p></div>
+<div class="text-center"><div class="w-12 h-12 mx-auto rounded-full bg-[#f59e0b]/20 flex items-center justify-center text-[#f59e0b]"><i class="fa-solid fa-star"></i></div><p class="text-[10px] text-white/70 mt-1">مواهب</p></div>
+<div class="text-center"><div class="w-12 h-12 mx-auto rounded-full bg-[#3b82f6]/20 flex items-center justify-center text-[#3b82f6]"><i class="fa-solid fa-user-group"></i></div><p class="text-[10px] text-white/70 mt-1">أصدقاء</p></div>
+</div>
+<div class="flex justify-between items-center mt-5 mb-3"><p class="text-white font-bold text-[13px]">البثوث الموصى بها</p><p class="text-[#ffeb3b] text-[11px]">المزيد <i class="fa-solid fa-chevron-left text-[9px]"></i></p></div>
+<div class="grid grid-cols-2 gap-3">
+<div onclick="openLive()" class="limona-card rounded-[18px] overflow-hidden relative h-[190px]"><span class="live-badge absolute top-2 right-2 text-[9px] text-white px-2 py-0.5 rounded-full font-bold z-10">● LIVE</span><span class="absolute top-2 left-2 bg-black/60 text-white text-[9px] px-2 py-0.5 rounded-full"><i class="fa-solid fa-eye"></i> 12.4K</span><img src="https://i.pravatar.cc/300?img=23" class="w-full h-full object-cover"><div class="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-2.5"><p class="text-white font-bold text-[12px]">سارة 💖</p><p class="text-white/60 text-[10px]">دردشة و ترفيه</p></div></div>
+<div onclick="openLive()" class="limona-card rounded-[18px] overflow-hidden relative h-[190px]"><span class="live-badge absolute top-2 right-2 text-[9px] text-white px-2 py-0.5 rounded-full font-bold z-10">● LIVE</span><span class="absolute top-2 left-2 bg-black/60 text-white text-[9px] px-2 py-0.5 rounded-full"><i class="fa-solid fa-eye"></i> 8.7K</span><img src="https://i.pravatar.cc/300?img=68" class="w-full h-full object-cover"><div class="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-2.5"><p class="text-white font-bold text-[12px]">علي 🎵</p><p class="text-white/60 text-[10px]">أغاني و ضحك</p></div></div>
+</div>
+</div>
+
+<!-- LIVE ROOM -->
+<div id="liveRoom" class="screen hidden absolute inset-0 z-50 bg-black flex flex-col">
+<img src="https://i.pravatar.cc/600?img=23" class="absolute inset-0 w-full h-full object-cover">
+<div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
+<div class="relative z-10 p-3 flex justify-between items-start">
+<div class="flex items-center gap-2">
+<img src="https://i.pravatar.cc/100?img=23" class="w-9 h-9 rounded-full border-2 border-[#ffeb3b]">
+<div><p class="text-white font-bold text-[12px]">لينا 👑</p><p class="text-white/70 text-[10px]">❤️ 12.6K</p></div>
+<button class="yellow-btn text-[10px] font-black px-3 py-1 rounded-full mr-2">متابعة</button>
+</div>
+<div class="flex items-center gap-2"><span class="bg-black/50 text-white text-[10px] px-2 py-1 rounded-full">3.2K <i class="fa-solid fa-xmark ml-1" onclick="closeLive()"></i></span></div>
+</div>
+<div class="relative z-10 px-3 mt-1 flex gap-2"><span class="live-badge text-[10px] text-white px-2 py-0.5 rounded-full">● LIVE</span><span class="bg-black/50 text-white text-[10px] px-2 py-0.5 rounded-full">01:24:36</span></div>
+<div class="relative z-10 mt-auto p-3 space-y-2">
+<div class="bg-black/40 backdrop-blur text-[11px] text-white rounded-full px-3 py-1.5 w-fit"><span class="text-[#ffeb3b]">أحمد:</span> ماشاءالله جمالك رهيب</div>
+<div class="bg-black/40 backdrop-blur text-[11px] text-white rounded-full px-3 py-1.5 w-fit"><span class="text-[#ffeb3b]">سعيد:</span> صوتك حلو 🎵</div>
+<div class="bg-black/40 backdrop-blur text-[11px] text-white rounded-full px-3 py-1.5 w-fit flex items-center gap-1">أرسل أحمد هدية ليمونة 🍋 x1</div>
+<div class="flex items-center gap-2 pt-2"><div class="flex-1 bg-white/10 backdrop-blur rounded-full px-4 py-2.5 text-[12px] text-white/50">اكتب رسالة...</div><div class="flex gap-2"><button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white"><i class="fa-solid fa-gift text-[#ffeb3b]"></i></button><button class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white"><i class="fa-regular fa-heart"></i></button></div></div>
+</div>
+</div>
+
+<!-- ROOMS -->
+<div id="rooms" class="screen hidden p-3">
+<div class="flex justify-between items-center"><p class="text-white font-bold">الغرف الجماعية</p><i class="fa-solid fa-users text-white/50"></i></div>
+<div class="flex gap-2 mt-3 overflow-x-auto"><span class="yellow-btn text-[11px] px-3 py-1 rounded-full font-bold">الكل</span><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1 rounded-full">بنات</span><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1 rounded-full">أولاد</span><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1 rounded-full">مواهب</span><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1 rounded-full">ألعاب</span></div>
+<div class="space-y-3 mt-4">
+<div class="limona-card rounded-[16px] p-3 flex gap-3"><img src="https://picsum.photos/seed/room1/80/80" class="w-[64px] h-[64px] rounded-[12px]"><div class="flex-1"><p class="text-white font-bold text-[12px]">جلسة دردشة و نغمات</p><p class="text-white/40 text-[10px] mt-1">12.4K</p></div><button class="yellow-btn text-[11px] font-black px-4 py-1.5 rounded-full self-center">انضم الآن</button></div>
+<div class="limona-card rounded-[16px] p-3 flex gap-3"><img src="https://picsum.photos/seed/room2/80/80" class="w-[64px] h-[64px] rounded-[12px]"><div class="flex-1"><p class="text-white font-bold text-[12px]">غرفة الضحك</p><p class="text-white/40 text-[10px] mt-1">8.7K</p></div><button class="yellow-btn text-[11px] font-black px-4 py-1.5 rounded-full self-center">انضم الآن</button></div>
+<div class="limona-card rounded-[16px] p-3 flex gap-3"><img src="https://picsum.photos/seed/room3/80/80" class="w-[64px] h-[64px] rounded-[12px]"><div class="flex-1"><p class="text-white font-bold text-[12px]">مواهب و إبداع</p><p class="text-white/40 text-[10px]">6.2K</p></div><button class="yellow-btn text-[11px] font-black px-4 py-1.5 rounded-full self-center">انضم الآن</button></div>
+</div>
+</div>
+
+<!-- MESSAGES -->
+<div id="messages" class="screen hidden p-3">
+<p class="text-white font-bold">الرسائل</p>
+<div class="flex gap-2 mt-3"><span class="yellow-btn text-[11px] px-3 py-1 rounded-full font-bold">الكل</span><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1 rounded-full">المحادثات</span><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1 rounded-full">طلبات المتابعة</span></div>
+<div class="space-y-1 mt-4">
+<div class="flex gap-3 p-2 rounded-xl"><img src="https://i.pravatar.cc/100?img=23" class="w-12 h-12 rounded-full"><div class="flex-1"><div class="flex justify-between"><p class="text-white font-bold text-[13px]">لينا</p><p class="text-white/30 text-[10px]">10:24</p></div><p class="text-white/50 text-[11px]">أرسل لك رسالة صوتية</p></div><span class="bg-[#ffeb3b] text-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">3</span></div>
+<div class="flex gap-3 p-2 rounded-xl"><img src="https://i.pravatar.cc/100?img=68" class="w-12 h-12 rounded-full"><div class="flex-1"><p class="text-white font-bold text-[13px]">أحمد</p><p class="text-white/50 text-[11px]">هلا كيفك؟</p></div><p class="text-white/30 text-[10px]">09:52</p></div>
+</div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="screen hidden p-4 text-center">
+<img src="https://i.pravatar.cc/200?img=68" class="w-20 h-20 rounded-full mx-auto border-4 border-[#ffeb3b]/30">
+<p class="text-white font-black text-[18px] mt-3">أحمد ✅</p>
+<p class="text-white/40 text-[11px]">@ahmad_123</p>
+<p class="text-white/70 text-[12px] mt-2">الحياة أجمل مع الأصدقاء 🍋</p>
+<div class="flex justify-center gap-8 mt-5"><div><p class="text-white font-black">45</p><p class="text-white/40 text-[10px]">المتابَعون</p></div><div><p class="text-white font-black">12.6K</p><p class="text-white/40 text-[10px]">المعجبون</p></div><div><p class="text-white font-black">23</p><p class="text-white/40 text-[10px]">المنشورات</p></div></div>
+<button class="yellow-btn w-full py-3 rounded-full font-black text-[13px] mt-6">تعديل الملف الشخصي</button>
+</div>
+
+<!-- SEARCH -->
+<div id="search" class="screen hidden p-3">
+<div class="bg-[#1e1e00] rounded-full px-4 py-2.5 flex items-center gap-2"><i class="fa-solid fa-magnifying-glass text-white/30 text-[12px]"></i><input placeholder="ابحث عن مستخدم أو غرفة..." class="bg-transparent flex-1 text-[12px] text-white outline-none placeholder:text-white/30"></div>
+<p class="text-white font-bold text-[13px] mt-5">الأكثر بحثاً</p>
+<div class="flex flex-wrap gap-2 mt-3"><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1.5 rounded-full"># مواهب</span><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1.5 rounded-full"># أغاني</span><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1.5 rounded-full"># ألعاب</span><span class="bg-[#1e1e00] text-white/60 text-[11px] px-3 py-1.5 rounded-full"># أصدقاء</span></div>
+</div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div id="bottomNav" class="absolute bottom-0 w-full bg-[#15170a] border-t border-white/[0.06] flex justify-around items-center py-2 px-2">
+<button onclick="showScreen('home')" class="nav-btn nav-active flex flex-col items-center gap-1"><i class="fa-solid fa-house text-[16px]"></i><span class="text-[9px]">الرئيسية</span></button>
+<button onclick="showScreen('search')" class="nav-btn text-white/40 flex flex-col items-center gap-1"><i class="fa-solid fa-magnifying-glass text-[16px]"></i><span class="text-[9px]">استكشاف</span></button>
+<button class="w-12 h-12 rounded-full yellow-btn flex items-center justify-center text-xl -mt-3 glow"><i class="fa-solid fa-plus text-black"></i></button>
+<button onclick="showScreen('messages')" class="nav-btn text-white/40 flex flex-col items-center gap-1 relative"><i class="fa-regular fa-message text-[16px]"></i><span class="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center">3</span><span class="text-[9px]">الرسائل</span></button>
+<button onclick="showScreen('profile')" class="nav-btn text-white/40 flex flex-col items-center gap-1"><i class="fa-regular fa-user text-[16px]"></i><span class="text-[9px]">الملف الشخصي</span></button>
+</div>
+
+</div>
+
+<script>
+setTimeout(()=>{document.getElementById('loadBar').style.width='100%'},100);
+setTimeout(()=>{document.getElementById('splash').style.opacity='0';document.getElementById('splash').style.pointerEvents='none';},2600);
+function showScreen(name){
+document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+document.getElementById(name).classList.remove('hidden');
+document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('nav-active'));
+event.currentTarget.classList.add('nav-active');
+}
+function openLive(){
+document.getElementById('liveRoom').classList.remove('hidden');
+document.getElementById('bottomNav').style.display='none';
+}
+function closeLive(){
+document.getElementById('liveRoom').classList.add('hidden');
+document.getElementById('bottomNav').style.display='flex';
+}
+</script>
+</body>
+  </html>
