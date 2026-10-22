@@ -1,16 +1,14 @@
 
 name: Build Limouna Live APK
 
-on:
-  workflow_dispatch:
-  push:
-    paths:
-      - 'web/**'
-      - 'capacitor.config.json'
-      - '.github/workflows/android-apk.yml'
+on: [workflow_dispatch, push]
+
+permissions:
+  contents: read
 
 jobs:
   build:
+    name: Build Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -22,9 +20,27 @@ jobs:
         with:
           node-version: 20
 
-      - name: Prepare project
+      - name: Verify web app
         run: |
-          npm init -y
+          if [ ! -f web/index.html ]; then
+            echo "ERROR: web/index.html was not found."
+            exit 1
+          fi
+          echo "Limouna Live web app found."
+
+      - name: Prepare package configuration
+        run: |
+          cat > package.json <<'EOF'
+          {
+            "name": "limouna-live",
+            "version": "1.0.0",
+            "private": true,
+            "description": "Limouna Live Android app"
+          }
+          EOF
+
+      - name: Install Capacitor
+        run: |
           npm install @capacitor/core@6 @capacitor/android@6
           npm install --save-dev @capacitor/cli@6
 
@@ -38,32 +54,37 @@ jobs:
           }
           EOF
 
-      - name: Verify web files
-        run: test -f web/index.html
-
-      - name: Create Android project if needed
+      - name: Prepare Android platform
         run: |
-          if [ ! -f android/app/build.gradle ] && [ ! -f android/app/build.gradle.kts ]; then
-            npx cap add android
+          if [ -f android/gradlew ] && \
+             { [ -f android/app/build.gradle ] || [ -f android/app/build.gradle.kts ]; }; then
+            echo "Existing Android project found."
           else
-            echo "Android project already exists; keeping it."
+            echo "Android folder is incomplete. Recreating it in the temporary build environment."
+            rm -rf android
+            npx cap add android
           fi
 
-      - name: Sync project
+      - name: Sync Android project
         run: npx cap sync android
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 17
+          cache: gradle
+          cache-dependency-path: android/**/*.gradle*
 
-      - name: Build APK
+      - name: Build debug APK
         working-directory: android
-        run: chmod +x gradlew && ./gradlew assembleDebug
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Limouna-Live-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
