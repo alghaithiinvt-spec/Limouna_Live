@@ -81,7 +81,14 @@ nav button span{font-size:21px}nav button.active{color:var(--lime)}
       <div id="accountBox" class="account-box hidden">
         <strong>حسابك في ليمونة</strong>
         <p id="accountEmail" style="margin-bottom:8px"></p>
-        <p id="accountStatus" class="small-muted"></p>
+        <p id="accountStatus" class="small-muted">يمكنك تعديل بياناتك أدناه.</p>
+        <label for="profileUsername">اسم المستخدم</label>
+        <input class="auth-input" id="profileUsername" type="text" maxlength="24" placeholder="مثال: ahmed2026" autocomplete="nickname">
+        <label for="profileFullName">الاسم الظاهر</label>
+        <input class="auth-input" id="profileFullName" type="text" maxlength="60" placeholder="اكتب اسمك">
+        <label for="profileBio">نبذة عنك</label>
+        <textarea class="auth-input" id="profileBio" maxlength="250" rows="3" placeholder="اكتب نبذة قصيرة عنك" style="width:100%;resize:vertical"></textarea>
+        <button id="saveProfileButton" class="primary" style="width:100%;margin:12px 0" onclick="saveProfile()">حفظ بياناتي</button>
         <button class="join" onclick="signOutUser()">تسجيل الخروج</button>
       </div>
       <div id="authForm">
@@ -123,6 +130,7 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_yXOwnfGhpMu6EdrdAW37mw_IbQbRXyD
 let sbClient = null;
 let authIsSignup = true;
 let currentUser = null;
+let profileLoadedFor = null;
 
 function initializeSupabase() {
   if (!window.supabase || !window.supabase.createClient) {
@@ -294,12 +302,70 @@ function updateAccountUI() {
     accountBox.classList.remove('hidden');
     authForm.classList.add('hidden');
     document.getElementById('accountEmail').textContent = currentUser.email || 'حساب مستخدم';
-    document.getElementById('accountStatus').textContent = 'تم تسجيل الدخول. سنضيف الملف الشخصي في المرحلة التالية.';
+    document.getElementById('accountStatus').textContent = 'جارٍ تحميل بيانات ملفك الشخصي...';
     document.getElementById('authTitle').textContent = 'حسابك في ليمونة لايف';
+    if (profileLoadedFor !== currentUser.id) loadProfile();
   } else {
+    profileLoadedFor = null;
     accountBox.classList.add('hidden');
     authForm.classList.remove('hidden');
     document.getElementById('authTitle').textContent = authIsSignup ? 'إنشاء حساب جديد' : 'تسجيل الدخول';
+  }
+}
+async function loadProfile() {
+  if (!sbClient || !currentUser) return;
+  const { data, error } = await sbClient.from('profiles').select('username, full_name, bio').eq('id', currentUser.id).maybeSingle();
+  if (error) {
+    console.error('loadProfile:', error);
+    document.getElementById('accountStatus').textContent = 'تعذر تحميل الملف الشخصي. تحقق من إعدادات الجدول وسياسات الوصول.';
+    return;
+  }
+  if (data) {
+    document.getElementById('profileUsername').value = data.username || '';
+    document.getElementById('profileFullName').value = data.full_name || '';
+    document.getElementById('profileBio').value = data.bio || '';
+  }
+  profileLoadedFor = currentUser.id;
+  document.getElementById('accountStatus').textContent = 'بياناتك متصلة بقاعدة البيانات.';
+}
+async function saveProfile() {
+  if (!sbClient || !currentUser) {
+    setAuthMessage('سجّل الدخول أولًا لحفظ بياناتك.');
+    return;
+  }
+  const button = document.getElementById('saveProfileButton');
+  const username = document.getElementById('profileUsername').value.trim();
+  const fullName = document.getElementById('profileFullName').value.trim();
+  const bio = document.getElementById('profileBio').value.trim();
+  if (username && !/^[a-zA-Z0-9_.-]{3,24}$/.test(username)) {
+    document.getElementById('accountStatus').textContent = 'اسم المستخدم يجب أن يكون من 3 إلى 24 حرفًا إنجليزيًا أو رقمًا، ويمكن استخدام النقطة والشرطة.';
+    return;
+  }
+  button.disabled = true;
+  button.textContent = 'جارٍ الحفظ...';
+  document.getElementById('accountStatus').textContent = 'جارٍ حفظ بياناتك...';
+  try {
+    const { error } = await sbClient.from('profiles').upsert({
+      id: currentUser.id,
+      username: username || null,
+      full_name: fullName || null,
+      bio,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' });
+    if (error) {
+      console.error('saveProfile:', error);
+      if (error.code === '23505') document.getElementById('accountStatus').textContent = 'اسم المستخدم مستخدم من شخص آخر. اختر اسمًا مختلفًا.';
+      else document.getElementById('accountStatus').textContent = 'تعذر الحفظ: ' + (error.message || 'تحقق من الجدول والسياسات.');
+      return;
+    }
+    profileLoadedFor = currentUser.id;
+    document.getElementById('accountStatus').textContent = 'تم حفظ بيانات ملفك الشخصي بنجاح.';
+  } catch (error) {
+    console.error('saveProfile:', error);
+    document.getElementById('accountStatus').textContent = 'حدث خطأ أثناء الحفظ. تحقق من الإنترنت ثم حاول مجددًا.';
+  } finally {
+    button.disabled = false;
+    button.textContent = 'حفظ بياناتي';
   }
 }
 document.addEventListener('DOMContentLoaded', async () => {
