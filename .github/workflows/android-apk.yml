@@ -41,8 +41,13 @@ jobs:
       - name: Verify web files
         run: test -f web/index.html
 
-      - name: Create Android project
-        run: npx cap add android
+      - name: Create Android project if needed
+        run: |
+          if [ ! -f android/app/build.gradle ] && [ ! -f android/app/build.gradle.kts ]; then
+            npx cap add android
+          else
+            echo "Android project already exists; keeping it."
+          fi
 
       - name: Sync project
         run: npx cap sync android
