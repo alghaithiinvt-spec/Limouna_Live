@@ -1,1 +1,47 @@
-
+{
+  "project_info": {
+    "project_number": "831659211988",
+    "project_id": "limouna-live",
+    "storage_bucket": "limouna-live.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831659211988:android:7cf82fea1c0d94d80ecf41",
+        "android_client_info": {
+          "package_name": "com.example.limouna_live"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831659211988-kunatgfqn2foq98ub7c4l71t0eh1mbf9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.limouna_live",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "831659211988-jc8r3h581qn2pmok6f0n046u38p00ok1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy7BIfXHdTbc7sC2CmM74Kk9sKw8SjSi8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831659211988-jc8r3h581qn2pmok6f0n046u38p00ok1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
