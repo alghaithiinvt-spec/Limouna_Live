@@ -22,16 +22,22 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-      - name: Add Android & Replace Icon
+      - name: Add Android
+        run: npx cap add android || echo "android exists"
+        
+      - name: Replace Icon
         run: |
-          npx cap add android
-          # هذا السطر هو اللي بيغير الأيقونة اللي في صورتك
-          find android/app/src/main/res -name "ic_launcher*.png" -exec rm {} \;
+          echo "Replacing icons..."
           for dir in android/app/src/main/res/mipmap-*; do
-            cp icon.png "$dir/ic_launcher.png"
-            cp icon.png "$dir/ic_launcher_round.png"
-            cp icon.png "$dir/ic_launcher_foreground.png"
+            if [ -d "$dir" ]; then
+              cp icon.png "$dir/ic_launcher.png" || true
+              cp icon.png "$dir/ic_launcher_round.png" || true
+            fi
           done
+          ls android/app/src/main/res/mipmap-xxxhdpi/
+          
+      - name: Build APK
+        run: |
           npx cap copy
           cd android
           chmod +x gradlew
