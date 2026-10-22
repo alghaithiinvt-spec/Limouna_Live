@@ -1,4 +1,4 @@
-name: Build Limona V2 - Icon Fix
+name: Build Limona V3 - Icon Fix
 
 on: [push]
 
@@ -19,22 +19,36 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Add Android
-        run: npx cap add android || echo "android exists"
-        
-      - name: Replace Icon
+      - name: Prepare Project
         run: |
-          echo "Replacing icons..."
-          for dir in android/app/src/main/res/mipmap-*; do
-            if [ -d "$dir" ]; then
-              cp icon.png "$dir/ic_launcher.png" || true
-              cp icon.png "$dir/ic_launcher_round.png" || true
-            fi
-          done
-          ls android/app/src/main/res/mipmap-xxxhdpi/
+          rm -rf android
+          mkdir -p web
+          if [ ! -f "web/index.html" ]; then
+            echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=https://limona.live"></head><body>Loading...</body></html>' > web/index.html
+          fi
+          npm install
+          
+      - name: Add Android
+        run: npx cap add android
+        
+      - name: Fix Duplicate Icon Error
+        run: |
+          echo "Deleting duplicate XML icons..."
+          # هذا هو الحل للمشكلة اللي في صورتك
+          find android/app/src/main/res -name "ic_launcher*.xml" -delete
+          rm -rf android/app/src/main/res/mipmap-anydpi-v26
+          
+          echo "Now replacing with lemon icon..."
+          if [ -f "icon.png" ]; then
+            for d in android/app/src/main/res/mipmap-*; do
+              cp icon.png "$d/ic_launcher.png"
+              cp icon.png "$d/ic_launcher_round.png"
+            done
+            echo "Icons replaced successfully!"
+          else
+            echo "icon.png not found"
+            ls -la
+          fi
           
       - name: Build APK
         run: |
@@ -46,5 +60,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: limona-v2-lemon-icon
+          name: limona-lemon-final
           path: android/app/build/outputs/apk/debug/app-debug.apk
