@@ -1,6 +1,6 @@
+
 {
-  "appId": "com.limonaive.app",
-  "appName": "Limona Live",
-  "webDir": "web",
-  "bundledWebRuntime": false
+  "appId": "com.limouna.live",
+  "appName": "ليمونة لايف",
+  "webDir": "web"
 }
